@@ -1,5 +1,10 @@
 namespace Yattaman.WebApi;
 
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+
 public sealed class Program
 {
     private Program()
@@ -13,6 +18,31 @@ public sealed class Program
             Args = args,
             ContentRootPath = AppContext.BaseDirectory,
         });
+
+        var resourceBuilder = ResourceBuilder.CreateDefault();
+
+        builder.Services.AddLogging(builder => builder.AddOpenTelemetry(options =>
+        {
+            options.SetResourceBuilder(resourceBuilder);
+            options.IncludeFormattedMessage = true;
+            options.IncludeScopes = true;
+            options.ParseStateValues = true;
+            options.AddOtlpExporter();
+        }));
+
+        builder.Services.AddOpenTelemetry()
+            .WithTracing(tracing => tracing
+                .SetResourceBuilder(resourceBuilder)
+                .SetSampler(new AlwaysOnSampler())
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddOtlpExporter())
+            .WithMetrics(metrics => metrics
+                .SetResourceBuilder(resourceBuilder)
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddOtlpExporter((_, options) => options.TemporalityPreference = MetricReaderTemporalityPreference.Delta))
+            ;
 
         builder.Services.AddHealthChecks();
 

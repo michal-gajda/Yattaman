@@ -7,7 +7,8 @@
       "launchBrowser": false,
       "applicationUrl": "http://localhost:5080",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "OTEL_RESOURCE_ATTRIBUTES" : "service.namespace=poc,service.name=yattaman,service.instance.id=instance-local-01,service.version=1.0.0"
       }
     }
   }
