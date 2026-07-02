@@ -32,7 +32,7 @@ public sealed class Program
 
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/openapi/v1.json", "Yattaman API v1");
+            options.SwaggerEndpoint("/openapi/v1.json", "Yattaman API v1.0");
         });
 
         app.UseAuthorization();
