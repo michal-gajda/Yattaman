@@ -31,17 +31,19 @@ public sealed class Program
         }));
 
         builder.Services.AddOpenTelemetry()
-            .WithTracing(tracing => tracing
-                .SetResourceBuilder(resourceBuilder)
-                .SetSampler(new AlwaysOnSampler())
-                .AddAspNetCoreInstrumentation()
-                .AddHttpClientInstrumentation()
-                .AddOtlpExporter())
             .WithMetrics(metrics => metrics
                 .SetResourceBuilder(resourceBuilder)
                 .AddAspNetCoreInstrumentation()
                 .AddHttpClientInstrumentation()
+                .AddProcessInstrumentation()
+                .AddRuntimeInstrumentation()
                 .AddOtlpExporter((_, options) => options.TemporalityPreference = MetricReaderTemporalityPreference.Delta))
+            .WithTracing(tracing => tracing
+                .SetResourceBuilder(resourceBuilder)
+                .SetSampler(new AlwaysOnSampler())
+                .AddAspNetCoreInstrumentation(options => options.RecordException = true)
+                .AddHttpClientInstrumentation(options => options.RecordException = true)
+                .AddOtlpExporter())
             ;
 
         builder.Services.AddHealthChecks();
