@@ -30,7 +30,7 @@ public sealed class IdempotentAttribute : ActionFilterAttribute
             var data = JsonSerializer.Deserialize<IdempotentResponse>(cachedResponse)!;
             context.Result = new ObjectResult(data.Value)
             {
-                StatusCode = data.StatusCode
+                StatusCode = data.StatusCode,
             };
 
             return;
@@ -43,7 +43,7 @@ public sealed class IdempotentAttribute : ActionFilterAttribute
             var responseToCache = new IdempotentResponse
             {
                 Value = objectResult.Value,
-                StatusCode = objectResult.StatusCode ?? 200
+                StatusCode = objectResult.StatusCode ?? 200,
             };
             await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(responseToCache), new DistributedCacheEntryOptions
             {

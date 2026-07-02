@@ -1,12 +1,9 @@
 namespace Yattaman.WebApi;
 
-public class WeatherForecast
+public sealed record class WeatherForecast
 {
-    public DateOnly Date { get; set; }
-
-    public int TemperatureC { get; set; }
-
+    public required DateOnly Date { get; init; }
+    public required int TemperatureC { get; init; }
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-
-    public string? Summary { get; set; }
+    public string? Summary { get; init; }
 }
