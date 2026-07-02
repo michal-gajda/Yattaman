@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/WebApi/">
+    <Project Path="src/WebApi/Yattaman.WebApi.csproj" />
+  </Folder>
+</Solution>
